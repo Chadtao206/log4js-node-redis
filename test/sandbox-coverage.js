@@ -1,7 +1,7 @@
 'use strict';
 
 const sandbox = require('@log4js-node/sandboxed-module');
-const NYC = require('nyc');
+const childProcess = require('child_process');
 
 sandbox.configure({
   sourceTransformers: {
@@ -9,8 +9,8 @@ sandbox.configure({
       if (this.filename.indexOf('node_modules') > -1) {
         return source;
       }
-      const nyc = new NYC();
-      return nyc.instrumenter().instrumentSync(source, this.filename);
+      return childProcess.execSync(`./node_modules/.bin/nyc instrument ${this.filename}`).toString();
     }
   }
 });
+
